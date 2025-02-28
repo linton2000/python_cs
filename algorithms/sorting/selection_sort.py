@@ -3,7 +3,7 @@
 from tester import Tester
 
 
-def selection_sort(arr: list):
+def selection_sort(arr: list) -> list:
     i = 0
     while i < len(arr):
         j = i

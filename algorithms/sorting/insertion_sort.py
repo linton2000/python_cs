@@ -3,7 +3,7 @@
 from tester import Tester
 
 
-def insertion_sort(arr: list):
+def insertion_sort(arr: list) -> list:
     i = 0
     while i < len(arr) - 1:
         j = i
