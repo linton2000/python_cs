@@ -20,4 +20,5 @@ def insertion_sort(arr: list):
 
 if __name__ == '__main__':
     tester = Tester()
-    tester.test(insertion_sort)
+    tester.test(insertion_sort, "Insertion Sort")
+    

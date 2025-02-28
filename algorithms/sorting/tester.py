@@ -10,8 +10,8 @@ class Tester:
             unsorted_lst = random.sample(range(1000), k = random.randint(10, 1000))
             self.cases.append((unsorted_lst, sorted(unsorted_lst)))
     
-    def test(self, sort_func):
-        print('Executing Test Cases...')
+    def test(self, sort_func, func_name):
+        print(f'Executing Test Cases for {func_name}...')
         for i, case in enumerate(self.cases):
             case = self.cases[i]
             print('Running Case', i+1, end='\r')
