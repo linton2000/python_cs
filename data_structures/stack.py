@@ -3,8 +3,9 @@ from typing import TypeVar
 
 T = TypeVar('T')
 
+
 class Stack:
-    """ Abstract class for various stack implementations.
+    """ Abstract class for various Stack ADT implementations.
     """
 
     def __init__(self) -> None:
@@ -48,15 +49,47 @@ class ArrayStack(Stack):
         return self.array[-1]
 
 
+class ListNode:
+    """ A simple singly linked list node
+    """
+    def __init__(self, val):
+        self.val = val
+        self.next = None
+    
+    def __str__(self):
+        return str(self.val)
+
+
+class LinkedListStack(Stack):
+    """ A linked list-based stack implementation.
+    """
+
+    def __init__(self):
+        Stack.__init__(self)
+        self.root = None
+    
+    def push(self, element) -> None:
+        # Set root ptr to new node & update next ptr to prev root.
+        self.root, self.root.next = ListNode(element), self.root
+    
+    def pop(self) -> T:
+        tmp = self.root
+        self.root = self.root.next  # Simply update ref to root & let garbage collection handle previous root.
+        return tmp
+    
+    def peek(self) -> T:
+        return self.root
+
+
 if __name__ == '__main__':
     
-    # Test string reversal using ArrayStack
-    inStr = '!selrahC notniL si eman ym ,olleH'
-    stack = ArrayStack()
-    for c in inStr:
-        stack.push(c)
-    
-    for _ in inStr:
-        print(stack.pop(), end='') # The `end` param ensures same line print.
-    print()
-    
+    def test_str_reversal(stack: Stack):
+        inStr = '!selrahC notniL si eman ym ,olleH'
+        for c in inStr:
+            stack.push(c)
+        
+        for _ in inStr:
+            print(stack.pop(), end='') # The `end` param ensures same line print.
+        print()
+
+    test_str_reversal(LinkedListStack())
