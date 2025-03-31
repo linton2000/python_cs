@@ -1,4 +1,4 @@
-# https://neetcode.io/problems/validate-parentheses
+#https://leetcode.com/problems/valid-parentheses/description/
 
 # First Attempt
 class Solution:

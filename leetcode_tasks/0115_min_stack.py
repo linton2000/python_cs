@@ -1,4 +1,4 @@
-# https://neetcode.io/problems/minimum-stack
+# https://leetcode.com/problems/min-stack/description/
 
 # Final Sol - Two Stacks (checked sols)
 class MinStack:
