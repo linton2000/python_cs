@@ -44,6 +44,7 @@ class ArrayStack(Stack):
         self.size += 1
     
     def pop(self) -> T:
+        self.size -= 1
         return self.array.pop()
 
     def peek(self) -> T:
@@ -61,10 +62,12 @@ class LinkedListStack(Stack):
     def push(self, element) -> None:
         # Set root ptr to new node & update next ptr to prev root.
         self.root, self.root.next = ListNode(element), self.root
+        self.size += 1
     
     def pop(self) -> T:
         tmp = self.root
         self.root = self.root.next  # Simply update ref to root & let garbage collection handle previous root.
+        self.size -= 1
         return tmp
     
     def peek(self) -> T:
@@ -78,7 +81,7 @@ if __name__ == '__main__':
         for c in inStr:
             stack.push(c)
         
-        for _ in inStr:
+        for _ in range(stack.size):
             print(stack.pop(), end='') # The `end` param ensures same line print.
         print()
 
