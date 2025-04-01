@@ -1,5 +1,6 @@
 from abc import abstractmethod
 from typing import TypeVar
+from linked_list import ListNode
 
 T = TypeVar('T')
 
@@ -47,17 +48,6 @@ class ArrayStack(Stack):
 
     def peek(self) -> T:
         return self.array[-1]
-
-
-class ListNode:
-    """ A simple singly linked list node
-    """
-    def __init__(self, val):
-        self.val = val
-        self.next = None
-    
-    def __str__(self):
-        return str(self.val)
 
 
 class LinkedListStack(Stack):
