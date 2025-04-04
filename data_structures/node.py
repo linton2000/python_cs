@@ -1,9 +1,9 @@
-''' Source for various Linked List implementations.
-'''
+""" Contains node definitions for linked lists & trees.
+"""
 
 
 class ListNode:
-    """ A simple singly linked list node
+    """ A simple singly linked list node.
     """
     def __init__(self, val):
         self.val = val
@@ -14,7 +14,7 @@ class ListNode:
     
 
 class TreeNode:
-    """ A node for a binary tree
+    """ A node for a binary tree.
     """
     def __init__(self, val):
         self.val = val
