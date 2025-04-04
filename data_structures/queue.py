@@ -1,6 +1,6 @@
 from abc import abstractmethod
 from typing import TypeVar
-from linked_list import ListNode
+from data_structures.node import ListNode
 
 T = TypeVar('T')
 
