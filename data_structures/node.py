@@ -1,5 +1,6 @@
 """ Contains node definitions for linked lists & trees.
 """
+from typing import Optional
 
 
 class ListNode:
@@ -7,9 +8,9 @@ class ListNode:
     """
     def __init__(self, val):
         self.val = val
-        self.next = None
+        self.next: Optional[ListNode] = None
     
-    def __str__(self):
+    def __str__(self) -> str:
         return str(self.val)
     
 
@@ -18,9 +19,9 @@ class TreeNode:
     """
     def __init__(self, val):
         self.val = val
-        self.left = None
-        self.right = None
+        self.left: Optional[TreeNode] = None
+        self.right: Optional[TreeNode] = None
     
-    def __str__(self):
+    def __str__(self) -> str:
         return str(self.val)
     
