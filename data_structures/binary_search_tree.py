@@ -24,6 +24,12 @@ class BinarySearchTree:
         """
         pass
 
+    def insert_all(self, vals: list) -> None:
+        """ Iteratively runs the insert method on all input array elements.
+        """
+        for val in vals:
+            self.insert(val)
+
     @abstractmethod
     def remove(self, target_val) -> None:
         """ Finds and removes the target_val node from the BST.
@@ -95,8 +101,7 @@ class LinkedListBST(BinarySearchTree):
 
 
 if __name__ == '__main__':
+    arr = [9, 1, 7, 6, 4, 5, 4, 8, 5, 4]
     bst = LinkedListBST()
-    bst.insert(1)
-    bst.insert(4)
-    bst.insert(8)
+    bst.insert_all(arr)
     print(bst.search(4))
