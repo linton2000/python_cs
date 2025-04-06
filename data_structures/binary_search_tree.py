@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from typing import Optional
+from typing import Optional, Union
 from node import TreeNode
 
 
@@ -11,7 +11,7 @@ class BinarySearchTree:
         self.size = 0
 
     @abstractmethod
-    def search(self, target_val) -> TreeNode:
+    def search(self, target_val) -> Union[TreeNode, bool]:
         """ Traverse the BST to find and return the target_val node. Returns False
         if target_val node doesn't exist in BST.
         """
@@ -58,8 +58,18 @@ class LinkedListBST(BinarySearchTree):
         super().__init__()
         self.root: Optional[TreeNode] = None
     
-    def search(self, target_val) -> TreeNode:
-        pass
+    def search(self, target_val) -> Union[TreeNode, bool]:
+        def _recursive_search(root: TreeNode, val) -> Union[TreeNode, bool]:
+            if not root:
+                return False
+            if val > root.val:
+                return _recursive_search(root.right, val)
+            if val < root.val:
+                return _recursive_search(root.left, val)
+            if val == root.val:
+                return root
+        
+        return _recursive_search(self.root, target_val)
 
     def insert(self, new_val) -> None:
         def _recursive_insert(root: TreeNode, val) -> TreeNode:
@@ -69,6 +79,7 @@ class LinkedListBST(BinarySearchTree):
                 root.right = _recursive_insert(root.right, val)
             elif val < root.val: # Go down left subtree
                 root.left = _recursive_insert(root.left, val)
+            return root  # Avoids breaking tree structure when root.val == val
 
         if self.root == None:
             self.root = TreeNode(new_val)
@@ -88,3 +99,4 @@ if __name__ == '__main__':
     bst.insert(1)
     bst.insert(4)
     bst.insert(8)
+    print(bst.search(4))
