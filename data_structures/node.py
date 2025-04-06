@@ -1,6 +1,7 @@
 """ Contains node definitions for linked lists & trees.
 """
 from typing import Optional
+import textwrap
 
 
 class ListNode:
@@ -23,5 +24,7 @@ class TreeNode:
         self.right: Optional[TreeNode] = None
     
     def __str__(self) -> str:
-        return str(self.val)
+        left = self.left.val if self.left else None
+        right = self.right.val if self.right else None
+        return f'TreeNode: {str(self.val)}\n- Left Child: {str(left)}\n- Right Child: {str(right)}'
     
