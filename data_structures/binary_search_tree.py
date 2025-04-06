@@ -1,6 +1,14 @@
 from abc import abstractmethod
-from typing import Optional, Union
+from typing import Optional, Union, Callable
+from enum import Enum, auto
 from node import TreeNode
+
+class Order(Enum):
+    """ Traversal order options for BFS & DFS traversal
+    """
+    INORDER = auto()
+    PREORDER = auto()
+    POSTORDER = auto()
 
 
 class BinarySearchTree:
@@ -45,6 +53,13 @@ class BinarySearchTree:
     @abstractmethod
     def get_max(self, root: TreeNode = None) -> TreeNode:
         """ Finds and returns the node with the maximum value.
+        """
+        pass
+
+    @abstractmethod
+    def dfs_traversal(self, order: Order, visit: Optional[Callable] = None) -> list:
+        """ Performs a depth-first search traversal on all BST nodes according to specified Order.
+        Applies the visit() function on each node. Returns a visit-ordered list of node values.
         """
         pass
 
@@ -96,6 +111,29 @@ class LinkedListBST(BinarySearchTree):
     def remove(self, target_val) -> None:
         pass
 
+    def dfs_traversal(self, order: Order, visit: Optional[Callable] = None) -> list:
+        lst = []
+
+        def _visit_append(node: TreeNode):
+            if visit:
+                visit()
+            lst.append(node.val)
+
+        def _recursive_dfs(root: Optional[TreeNode]):
+            if not root:
+                return
+            if order == Order.PREORDER:
+                _visit_append(root)
+            _recursive_dfs(root.left)
+            if order == Order.INORDER:
+                _visit_append(root)
+            _recursive_dfs(root.right)
+            if order == Order.POSTORDER:
+                _visit_append(root)
+        
+        _recursive_dfs(self.root)
+        return lst
+
     def __str__(self) -> None:
         pass
 
@@ -104,4 +142,4 @@ if __name__ == '__main__':
     arr = [9, 1, 7, 6, 4, 5, 4, 8, 5, 4]
     bst = LinkedListBST()
     bst.insert_all(arr)
-    print(bst.search(4))
+    print(bst.dfs_traversal(Order.POSTORDER))
