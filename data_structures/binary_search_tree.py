@@ -57,6 +57,13 @@ class BinarySearchTree:
         pass
 
     @abstractmethod
+    def get_height(self) -> int:
+        """ Returns the maximum height of the tree in integers.
+        Height defined as no. of nodes from top to bottom, i.e. a BST of 3 nodes has height = 2.
+        """
+        pass
+
+    @abstractmethod
     def dfs_traversal(self, order: Order, visit: Optional[Callable] = None) -> list:
         """ Performs a depth-first search traversal on all BST nodes according to specified Order.
         Applies the visit() function on each node. Returns a visit-ordered list of node values.
@@ -111,6 +118,14 @@ class LinkedListBST(BinarySearchTree):
     def remove(self, target_val) -> None:
         pass
 
+    def get_height(self) -> int:
+        def _recurse(root: TreeNode):
+            if not root:
+                return 0  # Empty tree defined as 0
+            return 1 + max(_recurse(root.left), _recurse(root.right))
+        
+        return _recurse(self.root)
+
     def dfs_traversal(self, order: Order, visit: Optional[Callable] = None) -> list:
         lst = []
 
@@ -135,11 +150,24 @@ class LinkedListBST(BinarySearchTree):
         return lst
 
     def __str__(self) -> None:
-        pass
+        res = ''
+        def _pretty_str(node: TreeNode, prefix: str = "", is_left: bool = True) -> str:
+            nonlocal res
+            
+            if node.right:
+                _pretty_str(node.right, prefix + ("│   " if is_left else "    "), False)
+
+            res += prefix + ("└── " if is_left else "┌── ") + str(node.val) + '\n'
+
+            if node.left:
+                _pretty_str(node.left, prefix + ("    " if is_left else "│   "), True)
+
+        _pretty_str(self.root)
+        return res
 
 
 if __name__ == '__main__':
     arr = [9, 1, 7, 6, 4, 5, 4, 8, 5, 4]
     bst = LinkedListBST()
     bst.insert_all(arr)
-    print(bst.dfs_traversal(Order.POSTORDER))
+    print(bst)
