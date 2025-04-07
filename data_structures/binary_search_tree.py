@@ -1,7 +1,9 @@
 from abc import abstractmethod
 from typing import Optional, Union, Callable
 from enum import Enum, auto
+from random import randint
 from node import TreeNode
+
 
 class Order(Enum):
     """ Traversal order options for BFS & DFS traversal
@@ -82,9 +84,12 @@ class LinkedListBST(BinarySearchTree):
     Assumes there are no duplicate node values.
     """
     
-    def __init__(self):
+    def __init__(self, size: Optional[int] = None):
         super().__init__()
         self.root: Optional[TreeNode] = None
+        if size:
+            vals = [randint(0, 100) for _ in range(size)]
+            self.insert_all(vals)
     
     def search(self, target_val) -> Union[TreeNode, bool]:
         def _recursive_search(root: TreeNode, val) -> Union[TreeNode, bool]:
@@ -116,6 +121,13 @@ class LinkedListBST(BinarySearchTree):
         self.size += 1
             
     def remove(self, target_val) -> None:
+        """ def _recursive_remove(root: Optional[TreeNode]):
+            if target_val < root.val:
+                _recursive_remove(root.left)
+            if target_val > root.val:
+                _recursive_remove(root.right)
+            if target_val == root.val:
+                 """
         pass
 
     def get_height(self) -> int:
@@ -153,7 +165,7 @@ class LinkedListBST(BinarySearchTree):
         res = ''
         def _pretty_str(node: TreeNode, prefix: str = "", is_left: bool = True) -> str:
             nonlocal res
-            
+
             if node.right:
                 _pretty_str(node.right, prefix + ("│   " if is_left else "    "), False)
 
@@ -167,7 +179,5 @@ class LinkedListBST(BinarySearchTree):
 
 
 if __name__ == '__main__':
-    arr = [9, 1, 7, 6, 4, 5, 4, 8, 5, 4]
-    bst = LinkedListBST()
-    bst.insert_all(arr)
+    bst = LinkedListBST(10)
     print(bst)
