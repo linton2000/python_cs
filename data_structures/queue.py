@@ -1,6 +1,6 @@
 from abc import abstractmethod
 from typing import TypeVar
-from node import ListNode
+from .node import ListNode
 
 T = TypeVar('T')
 

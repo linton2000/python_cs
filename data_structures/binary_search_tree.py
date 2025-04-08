@@ -2,7 +2,8 @@ from abc import abstractmethod
 from typing import Optional, Union, Callable
 from enum import Enum, auto
 from random import randint
-from node import TreeNode
+from .node import TreeNode
+from .queue import LinkedListQueue
 
 
 class Order(Enum):
@@ -68,7 +69,14 @@ class BinarySearchTree:
     @abstractmethod
     def dfs_traversal(self, order: Order, visit: Optional[Callable] = None) -> list:
         """ Performs a depth-first search traversal on all BST nodes according to specified Order.
-        Applies the visit() function on each node. Returns a visit-ordered list of node values.
+        Applies the visit() function on each node (if given). Returns a visit-ordered list of node values.
+        """
+        pass
+
+    @abstractmethod
+    def bfs_traversal(self, visit: Optional[Callable] = None) -> list:
+        """ Performs a breadth-first search traversal on all BST nodes.
+        Applies the visit() function on each node (if given). Returns a visit-ordered list of node values.
         """
         pass
 
@@ -202,6 +210,29 @@ class LinkedListBST(BinarySearchTree):
         _recursive_dfs(self.root)
         return lst
 
+    def bfs_traversal(self, visit: Optional[Callable] = None) -> list:
+        res = []
+        queue = LinkedListQueue()
+
+        if self.root:
+            queue.enqueue(self.root)
+        else:
+            return  # No tree to traverse
+        
+        while queue.size != 0:
+            # Pop from queue & perform visit
+            curr = queue.dequeue()
+            if visit:
+                visit(curr)
+            res.append(str(curr))
+
+            if curr.left:
+                queue.enqueue(curr.left)
+            if curr.right:
+                queue.enqueue(curr.right)
+        
+        return res
+
     def __str__(self) -> None:
         res = ''
         def _pretty_str(node: TreeNode, prefix: str = "", is_left: bool = True) -> str:
@@ -222,6 +253,5 @@ class LinkedListBST(BinarySearchTree):
 if __name__ == '__main__':
     bst = LinkedListBST(in_vals=[9, 6, 13, 11, 17, 3, 7, 1, 4, 10, 12, 15, 19])
     print(bst)
-    bst.remove(9)
-    print(bst)
+    print(bst.bfs_traversal())
     
