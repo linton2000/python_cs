@@ -84,12 +84,14 @@ class LinkedListBST(BinarySearchTree):
     Assumes there are no duplicate node values.
     """
     
-    def __init__(self, size: Optional[int] = None):
+    def __init__(self, size: Optional[int] = None, in_vals: Optional[list] = None):
         super().__init__()
         self.root: Optional[TreeNode] = None
         if size:
             vals = [randint(0, 100) for _ in range(size)]
             self.insert_all(vals)
+        if in_vals:
+            self.insert_all(in_vals)
     
     def search(self, target_val) -> Union[TreeNode, bool]:
         def _recursive_search(root: TreeNode, val) -> Union[TreeNode, bool]:
@@ -121,14 +123,53 @@ class LinkedListBST(BinarySearchTree):
         self.size += 1
             
     def remove(self, target_val) -> None:
-        """ def _recursive_remove(root: Optional[TreeNode]):
-            if target_val < root.val:
-                _recursive_remove(root.left)
-            if target_val > root.val:
-                _recursive_remove(root.right)
-            if target_val == root.val:
-                 """
-        pass
+        def _recursive_remove(root: Optional[TreeNode], val):
+            if val < root.val:
+                root.left = _recursive_remove(root.left, val)
+            if val > root.val:
+                root.right = _recursive_remove(root.right, val)
+            if val == root.val:
+                if root.left and root.right:
+                    # Replace with max element in left subtree
+                    left_max = self.get_max(root.left)
+                    root.val = left_max.val
+                    root.left = _recursive_remove(root.left, left_max.val)
+                elif root.left:
+                    root = root.left
+                else:
+                    root = root.right  # Handles both right leaf node & None assignment
+                self.size -= 1
+            return root
+            
+        self.root = _recursive_remove(self.root, target_val)
+    
+    def get_min(self, in_root: Optional[TreeNode] = None) -> Optional[TreeNode]:
+        def _recursive_min(root: Optional[TreeNode]):
+            if not root:
+                return None  # To handle emptry trees
+            if root.left:
+                return _recursive_min(root.left)
+            elif root:
+                return root
+            
+        if in_root:
+            return _recursive_min(in_root)
+        else:
+            return _recursive_min(self.root)
+    
+    def get_max(self, in_root: Optional[TreeNode] = None) -> Optional[TreeNode]:
+        def _recursive_max(root: Optional[TreeNode]):
+            if not root:
+                return None  # To handle emptry trees
+            if root.right:
+                return _recursive_max(root.right)
+            elif root:
+                return root
+            
+        if in_root:
+            return _recursive_max(in_root)
+        else:
+            return _recursive_max(self.root)
 
     def get_height(self) -> int:
         def _recurse(root: TreeNode):
@@ -179,5 +220,8 @@ class LinkedListBST(BinarySearchTree):
 
 
 if __name__ == '__main__':
-    bst = LinkedListBST(10)
+    bst = LinkedListBST(in_vals=[9, 6, 13, 11, 17, 3, 7, 1, 4, 10, 12, 15, 19])
     print(bst)
+    bst.remove(9)
+    print(bst)
+    
