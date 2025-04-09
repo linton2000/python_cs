@@ -11,7 +11,7 @@ class ListNode:
         self.val = val
         self.next: Optional[ListNode] = None
     
-    def __str__(self) -> str:
+    def __repr__(self) -> str:
         return str(self.val)
     
 
@@ -28,6 +28,6 @@ class TreeNode:
         right = self.right.val if self.right else None
         return f'TreeNode: {str(self.val)}\n- Left Child: {str(left)}\n- Right Child: {str(right)}'
 
-    def __str__(self) -> str:
+    def __repr__(self) -> str:
         return str(self.val)
     
