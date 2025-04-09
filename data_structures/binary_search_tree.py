@@ -2,8 +2,8 @@ from abc import abstractmethod
 from typing import Optional, Union, Callable
 from enum import Enum, auto
 from random import randint
-from .node import TreeNode
-from .queue import LinkedListQueue
+from node import TreeNode
+from my_queue import LinkedListQueue
 
 
 class Order(Enum):
