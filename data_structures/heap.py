@@ -63,3 +63,31 @@ class Heap:
         """ Return a string representation of the heap instance.
         """
         pass
+
+
+class ArrayHeap(Heap):
+    """ An array-based implementation of the Heap ADT.
+    """
+    def __init__(self, heap_type):
+        super().__init__(heap_type)
+        self.array = [0]
+
+    def push(self, new_val: T) -> None:
+        self.array.append(new_val)
+        self.size += 1
+
+        if len(self.array) == 2:  # Only 1 element in heap
+            return
+
+        # Percolate new value up
+        i = len(self.array) - 1
+        while self._compare(self.array[i], self.array[i//2]):
+            self.array[i//2], self.array[i] = self.array[i], self.array[i//2]  # Swap parent & child
+            i = i//2  # Move up heap
+
+
+if __name__ == '__main__':
+    heap = ArrayHeap(HeapType.MIN_HEAP)
+    for i in range(21, 0, -2):
+        heap.push(i)
+    print(heap.array)
