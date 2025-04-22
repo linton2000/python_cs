@@ -84,6 +84,12 @@ class ArrayHeap(Heap):
         while self._compare(self.array[i], self.array[i//2]):
             self.array[i//2], self.array[i] = self.array[i], self.array[i//2]  # Swap parent & child
             i = i//2  # Move up heap
+    
+    def pop(self) -> T:
+        pass
+
+    def peek(self) -> T:
+        return self.array[1]
 
     def __str__(self):
         res = ''
