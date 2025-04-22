@@ -85,9 +85,25 @@ class ArrayHeap(Heap):
             self.array[i//2], self.array[i] = self.array[i], self.array[i//2]  # Swap parent & child
             i = i//2  # Move up heap
 
+    def __str__(self):
+        res = ''
+        def _pretty_str(node_i: int, prefix: str = "", is_left: bool = True) -> str:
+            nonlocal res
+
+            if (2*node_i + 1) < len(self.array):  # If right child exists
+                _pretty_str(2*node_i + 1, prefix + ("│   " if is_left else "    "), False)
+
+            res += prefix + ("└── " if is_left else "┌── ") + str(self.array[node_i]) + '\n'
+
+            if (2*node_i) < len(self.array):  # If left child exists
+                _pretty_str(2*node_i, prefix + ("    " if is_left else "│   "), True)
+        
+        _pretty_str(1)  # Root node index
+        return res
+
 
 if __name__ == '__main__':
     heap = ArrayHeap(HeapType.MIN_HEAP)
     for i in range(21, 0, -2):
         heap.push(i)
-    print(heap.array)
+    print(heap)
