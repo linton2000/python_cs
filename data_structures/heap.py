@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from typing import TypeVar
+from typing import TypeVar, Optional
 from enum import Enum, auto
 
 T = TypeVar('T')
@@ -68,9 +68,12 @@ class Heap:
 class ArrayHeap(Heap):
     """ An array-based implementation of the Heap ADT.
     """
-    def __init__(self, heap_type):
+    def __init__(self, heap_type, in_vals: Optional[list] = None):
         super().__init__(heap_type)
         self.array = [0]
+        if in_vals:
+            for val in in_vals: 
+                self.push(val)
 
     def push(self, new_val: T) -> None:
         self.array.append(new_val)
@@ -86,7 +89,32 @@ class ArrayHeap(Heap):
             i = i//2  # Move up heap
     
     def pop(self) -> T:
-        pass
+        self.size -= 1
+        if len(self.array) == 1:
+            return  # No elements to pop
+        if len(self.array) == 2:
+            return self.array.pop()  # Only 1 element to pop
+        
+        res = self.array[1]  # Save root node
+        self.array[1] = self.array.pop()  # Move last node to root
+
+        # Percolate/sink new root down to right place
+        i = 1
+        while 2*i < len(self.array):  # Left child exists
+            # Check if there's a need to sink
+            if self._compare(self.array[2*i], self.array[i]) \
+            or (2*i+1 < len(self.array) and self._compare(self.array[2*i + 1], self.array[i])):
+                
+                # Figure out which child to swap with
+                swap_i = 2*i
+                if (2*i+1 < len(self.array)) and self._compare(self.array[2*i + 1], self.array[2*i]):
+                    swap_i = 2*i + 1  # Need to swap with right child instead
+
+                self.array[i], self.array[swap_i] = self.array[swap_i], self.array[i]
+                i = swap_i
+            else:
+                break  # Node in right place
+        return res
 
     def peek(self) -> T:
         return self.array[1]
@@ -109,7 +137,11 @@ class ArrayHeap(Heap):
 
 
 if __name__ == '__main__':
-    heap = ArrayHeap(HeapType.MIN_HEAP)
-    for i in range(21, 0, -2):
-        heap.push(i)
+    heap = ArrayHeap(
+        heap_type=HeapType.MIN_HEAP, 
+        in_vals=[17, 65, 19, 21, 19, 14, 16, 26, 68, 30])
     print(heap)
+    res = []
+    while heap.size > 0:
+        res.append(heap.pop())
+    print(res)
