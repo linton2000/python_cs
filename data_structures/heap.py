@@ -53,7 +53,7 @@ class Heap:
         pass
 
     @abstractmethod
-    def heapify(self, in_vals: list[T], heap_type: HeapType) -> None:
+    def heapify(self, in_vals: list[T]) -> None:
         """ Take a list of values and build a heap from it according to specified heap type.
         """
         pass
@@ -68,12 +68,9 @@ class Heap:
 class ArrayHeap(Heap):
     """ An array-based implementation of the Heap ADT.
     """
-    def __init__(self, heap_type, in_vals: Optional[list] = None):
+    def __init__(self, heap_type):
         super().__init__(heap_type)
         self.array = [0]
-        if in_vals:
-            for val in in_vals: 
-                self.push(val)
 
     def push(self, new_val: T) -> None:
         self.array.append(new_val)
@@ -118,6 +115,34 @@ class ArrayHeap(Heap):
 
     def peek(self) -> T:
         return self.array[1]
+    
+    def heapify(self, lst: list[T]) -> None:
+        self.array = lst.copy() # Might have to replace with deepcopy.
+        self.size = len(lst)
+
+        # Move 1st element back to pad start of list
+        self.array.append(self.array[0])
+        self.array[0] = 0
+
+        # Percolate all non-leaf elements down
+        curr = len(lst) // 2
+        while curr > 0:
+            i = curr
+            # Percolate current element down.
+            while 2*i < len(self.array):  # Left child exists
+                if self._compare(self.array[2*i], self.array[i]) \
+                or (2*i+1 < len(self.array) and self._compare(self.array[2*i + 1], self.array[i])):
+                    
+                    # Figure out which child to swap with
+                    swap_i = 2*i
+                    if (2*i+1 < len(self.array)) and self._compare(self.array[2*i + 1], self.array[2*i]):
+                        swap_i = 2*i + 1  # Need to swap with right child instead
+
+                    self.array[i], self.array[swap_i] = self.array[swap_i], self.array[i]
+                    i = swap_i
+                else:
+                    break  # Node in right place
+            curr -= 1
 
     def __str__(self):
         res = ''
@@ -137,9 +162,8 @@ class ArrayHeap(Heap):
 
 
 if __name__ == '__main__':
-    heap = ArrayHeap(
-        heap_type=HeapType.MIN_HEAP, 
-        in_vals=[17, 65, 19, 21, 19, 14, 16, 26, 68, 30])
+    heap = ArrayHeap(HeapType.MIN_HEAP)
+    heap.heapify([17, 65, 19, 21, 19, 14, 16, 26, 68, 30])
     print(heap)
     res = []
     while heap.size > 0:
