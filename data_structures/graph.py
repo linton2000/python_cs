@@ -1,16 +1,22 @@
-from abc import abstractmethod
+import random
+from abc import ABC, abstractmethod
+
 import matplotlib.pyplot as plt
 import networkx as nx
 
 
-class Graph:
+class Graph(ABC):
     """ Abstract class for computational graphs.
     """
-    def __init__(self, graph = []):
+    def __init__(self, graph: list[any] = []):
         self.num_nodes = 0
         self.num_edges = 0
         self.graph = graph
         self.net_graph = None
+    
+    @abstractmethod
+    def rand_create(num_nodes: int, num_edges: int):
+        pass
 
     @abstractmethod
     def plot_graph(self):
@@ -34,6 +40,16 @@ class GridMatrix(Graph):
 
 class AdjacencyMatrix(Graph):
     pass
+
+    def rand_create(self, num_nodes: int, num_edges: int):
+        """ Randomly creates an NxN adjacency matrix (N =: num_nodes) with M (num_edges) edges.
+        This will be a directed, unweighted graph that allows self-loop.
+        """
+        self.graph = [[0] * num_nodes for _ in range(num_nodes)]
+        graph_coords = [(r, c) for r in range(num_nodes) for c in range(num_nodes)]
+        edge_coords = random.sample(graph_coords, k=num_edges)
+        for r, c in edge_coords:
+            self.graph[r][c] = 1
 
     def plot_graph(self):
         if not self.net_graph:
@@ -62,13 +78,6 @@ class EdgeList(Graph):
 
 
 if __name__ == '__main__':
-    # 0 ↔ 1
-    #
-    #
-    adjacency_matrix = [
-        [0, 0, 0],
-        [2, 0, 0],
-        [2, 0, 0]
-    ]
-    graph = AdjacencyMatrix(adjacency_matrix)
+    graph = AdjacencyMatrix()
+    graph.rand_create(5, 6)
     graph.plot_graph()
