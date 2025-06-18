@@ -182,20 +182,24 @@ class AdjacencyList(Graph):
     
     def rand_create(self, num_nodes, num_edges):
         # Random sum list algo (think of the sum as rope & make k random cuts)
-        cuts = [0]
-        cuts += sorted(choices(range(num_edges), k=(num_nodes - 1)))  # The -1 fixes an off by one error.
-        cuts += [num_edges]
-
-        num_neighbours = []
-        for i in range(len(cuts) - 1):
-            num_neighbours.append(cuts[i+1] - cuts[i])
+        if num_nodes - 1 <= num_edges:
+            cuts = [0] + sorted(sample(range(1, num_edges), k=num_nodes - 1)) + [num_edges]
+            num_neighbours = []
+            for i in range(len(cuts) - 1):
+                num_neighbours.append(cuts[i+1] - cuts[i])
+        else:
+            # fallback: just manually assign
+            num_neighbours = [0] * num_nodes
+            for _ in range(num_edges):
+                node = randint(0, num_nodes - 1)
+                num_neighbours[node] += 1
         
         # Create adj. list based on random sum list
         self.graph = {}
         for i in range(num_nodes):
             self.graph[i] = []
             for _ in range(num_neighbours[i]):
-                self.graph[i].append(randint(0, num_nodes))
+                self.graph[i].append(randint(0, num_nodes - 1))
         
         self.num_edges = num_edges
         self.num_nodes = num_nodes
@@ -215,10 +219,32 @@ class AdjacencyList(Graph):
 class EdgeList(Graph):
     """ Edge List implementation of the Graph interface. Graphs are directed & unweighted with self-loops.
     """
-    pass
+    def __init__(self, graph = []):
+        super().__init__(graph)
 
+    def rand_create(self, num_nodes, num_edges):
+        self.graph = []
+        nodes = list(range(num_nodes))
+        all_possible_edges = [(src, dst) for src in nodes for dst in nodes]
+
+        self.graph = sample(all_possible_edges, k=num_edges)
+        self.num_nodes = num_nodes
+        self.num_edges = num_edges
+    
+    def plot_graph(self):
+        # Simple iteration of edge list to create net graph
+        if not self.net_graph:
+            self.net_graph = nx.DiGraph()
+
+            for node in range(self.num_nodes):
+                self.net_graph.add_node(node)
+
+            for edge in self.graph:
+                self.net_graph.add_edge(edge[0], edge[1])
+        
+        self._draw_netx_graph()
 
 if __name__ == '__main__':
-    graph = AdjacencyList()
-    graph.rand_create(4, 5)
+    graph = EdgeList()
+    graph.rand_create(num_nodes=5, num_edges=8)
     graph.plot_graph()
