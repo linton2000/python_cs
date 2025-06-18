@@ -1,4 +1,4 @@
-from random import random, sample
+from random import random, sample, choices, randint
 from abc import ABC, abstractmethod
 from math import ceil, sqrt
 
@@ -23,6 +23,8 @@ class Graph(ABC):
 
     @abstractmethod
     def plot_graph(self):
+        """ Plots graph using `matplotlib` and the `networkx` frameworks.
+        """
         pass
 
     def _draw_netx_graph(self):
@@ -155,8 +157,6 @@ class AdjacencyMatrix(Graph):
             self.graph[r][c] = 1
 
     def plot_graph(self):
-        """ Plots the previously created graph using `matplotlib` and the `networkx` frameworks.
-        """
         if not self.net_graph:
             # Initialise directed graph with nodes
             self.net_graph = nx.DiGraph()
@@ -175,14 +175,50 @@ class AdjacencyMatrix(Graph):
 
 
 class AdjacencyList(Graph):
-    pass
+    """ Adjacency List implementation of the Graph interface. Graphs are directed & unweighted with self-loops.
+    """
+    def __init__(self, graph = []):
+        super().__init__(graph)
+    
+    def rand_create(self, num_nodes, num_edges):
+        # Random sum list algo (think of the sum as rope & make k random cuts)
+        cuts = [0]
+        cuts += sorted(choices(range(num_edges), k=(num_nodes - 1)))  # The -1 fixes an off by one error.
+        cuts += [num_edges]
 
+        num_neighbours = []
+        for i in range(len(cuts) - 1):
+            num_neighbours.append(cuts[i+1] - cuts[i])
+        
+        # Create adj. list based on random sum list
+        self.graph = {}
+        for i in range(num_nodes):
+            self.graph[i] = []
+            for _ in range(num_neighbours[i]):
+                self.graph[i].append(randint(0, num_nodes))
+        
+        self.num_edges = num_edges
+        self.num_nodes = num_nodes
+    
+    def plot_graph(self):
+        # Traverse adj. list & create net graph
+        if not self.net_graph:
+            self.net_graph = nx.DiGraph()
+
+            for node, neighbours in self.graph.items():
+                self.net_graph.add_node(node)
+                for neighbour in neighbours:
+                    self.net_graph.add_edge(node, neighbour)
+        
+        self._draw_netx_graph()
 
 class EdgeList(Graph):
+    """ Edge List implementation of the Graph interface. Graphs are directed & unweighted with self-loops.
+    """
     pass
 
 
 if __name__ == '__main__':
-    graph = GridMatrix()
-    graph.rand_create(200, has_path=True)
+    graph = AdjacencyList()
+    graph.rand_create(4, 5)
     graph.plot_graph()
