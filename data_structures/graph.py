@@ -127,8 +127,7 @@ class GridMatrix(Graph):
         # Fill out the rest of the grid to satisfy num_nodes
         remaining_zeros = num_nodes - len(path)
         if remaining_zeros < 0:
-            raise ValueError(f"`num_nodes` is too small to fit even the minimal path. \
-                             Need {side ** 2} nodes to guarantee successful random GridMatrix creation with path.")
+            raise ValueError(f"`num_nodes` is too small to fit even the minimal path. Need {side ** 2} nodes to guarantee successful random GridMatrix creation with path.")
         non_path_coords = [(x, y) for x in range(side) for y in range(side) if graph[x][y] == 1]
         i = 0
         while remaining_zeros > 0:
