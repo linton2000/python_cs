@@ -1,32 +1,36 @@
 from data_structures.graph import GridMatrix
 
 
-def grid_dfs(matrix: GridMatrix, x = 0, y = 0, count = 0, visited = []):
-    """ Count no. of unique paths from top left to bottom right in GridMatrix.
+def grid_dfs(matrix: GridMatrix, r = 0, c = 0, visited = None):
+    """ Count no. of unique paths from top left to bottom right in GridMatrix (a square grid).
     """
-    neighbours = [(x, y-1), (x-1, y), (x, y+1), (x+1,y)]  # Up/left/down/right
-    for i, j in neighbours:
-        # Out of bounds (past top/left/bottom/right edges) OR blocked path OR already visited
-        if i < 0 or j < 0 or i >= len(matrix.graph) or j >= len(matrix.graph) or matrix.graph[i][j] == 1 or (i, j) in visited:
-            continue
-        elif i == len(matrix.graph) - 1 and j == len(matrix.graph) - 1:  # Reached target
-            return 1
-        else:
-            break
-    
-    visited.append((i, j))
-    
-    count += grid_dfs(matrix, x=(x-1), y=y, count=count, visited=visited)  # Up
-    count += grid_dfs(matrix, x=x, y=(y-1), count=count, visited=visited)  # Left
-    count += grid_dfs(matrix, x=(x+1), y=y, count=count, visited=visited)  # Down
-    count += grid_dfs(matrix, x=x, y=(y+1), count=count, visited=visited)  # Right
+    if visited is None:
+        visited = []
 
-    visited.pop((i, j))
+    count = 0
+    # Out of bounds (past left/up/right/bottom edges) OR blocked path OR already visited
+    if r < 0 or c < 0 or r >= len(matrix.graph) or c >= len(matrix.graph) or matrix.graph[r][c] == 1 or (r, c) in visited:
+        return 0
+    elif r == len(matrix.graph) - 1 and c == len(matrix.graph) - 1:  # Reached target
+        return 1
+    else:
+        visited.append((r, c))
+
+        neighbours = [(r, c-1), (r-1, c), (r, c+1), (r+1,c)]  # Left, Up, Right, Down
+        for i, j in neighbours:
+            count += grid_dfs(matrix, r=i, c=j, visited=visited)
+
+        visited.pop()
 
     return count
 
 if __name__ == '__main__':
     matrix = GridMatrix()
-    matrix.rand_create(11)
+    matrix.graph = [
+        [0, 0, 0, 0],
+        [1, 1, 0, 0],
+        [0, 0, 0, 1],
+        [0, 1, 0, 0]
+    ]
     print(grid_dfs(matrix))
     
